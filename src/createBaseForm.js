@@ -26,6 +26,7 @@ import FieldElemWrapper from './FieldElemWrapper';
 
 const DEFAULT_TRIGGER = 'onChange';
 
+// 利用mixins
 function createBaseForm(option = {}, mixins = []) {
   const {
     validateMessages,
@@ -222,6 +223,7 @@ function createBaseForm(option = {}, mixins = []) {
         };
       },
 
+      // 根据用户的options 组装出props出来 作为后面传递给包裹的表单项组件的props
       getFieldProps(name, usersFieldOption = {}) {
         if (!name) {
           throw new Error('Must call `getFieldProps` with valid name string!');
@@ -239,6 +241,7 @@ function createBaseForm(option = {}, mixins = []) {
 
         delete this.clearedFieldMetaCache[name];
 
+        // 组装参数
         const fieldOption = {
           name,
           trigger: DEFAULT_TRIGGER,
@@ -255,7 +258,8 @@ function createBaseForm(option = {}, mixins = []) {
         } = fieldOption;
 
         const fieldMeta = this.fieldsStore.getFieldMeta(name);
-        if ('initialValue' in fieldOption) {
+        if ('initialValue' in fieldOption) { // 这么写 是为了 null 和 undefined的时候也能起作用
+          // 设置fieldMeta.initialValue 后面getFieldValue会有从这里面拿值的代码分支情况
           fieldMeta.initialValue = fieldOption.initialValue;
         }
 
@@ -691,6 +695,7 @@ function createBaseForm(option = {}, mixins = []) {
 
       render() {
         const { wrappedComponentRef, ...restProps } = this.props; // eslint-disable-line
+        // 给包裹组件加上[formPropName]默认就是name 让其能够拿到值
         const formProps = {
           [formPropName]: this.getForm(),
         };
@@ -709,6 +714,7 @@ function createBaseForm(option = {}, mixins = []) {
         } else if (wrappedComponentRef) {
           formProps.ref = wrappedComponentRef;
         }
+        // 给包裹组件加上了ref 和 
         const props = mapProps.call(this, {
           ...formProps,
           ...restProps,

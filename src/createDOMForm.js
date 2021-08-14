@@ -50,6 +50,7 @@ function getScrollableContainer(n) {
   return nodeName === 'body' ? node.ownerDocument : node;
 }
 
+// 在createForm的基础上扩展了validateFieldsAndScroll这个方法
 const mixin = {
   getForm() {
     return {

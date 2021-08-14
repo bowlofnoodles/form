@@ -1,6 +1,7 @@
 import createBaseForm from './createBaseForm';
 
 export const mixin = {
+  // 利用mixins 注入这些方法 就是未来props.form上的方法
   getForm() {
     return {
       getFieldsValue: this.fieldsStore.getFieldsValue,
