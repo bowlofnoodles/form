@@ -271,6 +271,7 @@ function createBaseForm(option = {}, mixins = []) {
           validate,
         } = fieldOption;
 
+        // meta上放了这个表单项的一些数据 其中也就包括值
         const fieldMeta = this.fieldsStore.getFieldMeta(name);
         if ('initialValue' in fieldOption) { // 这么写 是为了 null 和 undefined的时候也能起作用
           // 设置fieldMeta.initialValue 后面getFieldValue会有从这里面拿值的代码分支情况
