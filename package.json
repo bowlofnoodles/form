@@ -41,9 +41,7 @@
     "start": "rc-tools run server",
     "pub": "rc-tools run pub --babel-runtime",
     "lint": "rc-tools run lint",
-    "lint:fix": "rc-tools run lint --fix",
-    "prepublish": "rc-tools run guard",
-    "coverage": "jest --coverage"
+    "lint:fix": "rc-tools run lint --fix"
   },
   "jest": {
     "setupFiles": [
