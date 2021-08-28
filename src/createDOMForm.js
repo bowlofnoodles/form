@@ -83,7 +83,9 @@ const mixin = {
         });
 
         if (firstNode) {
-          const c = options.container || getScrollableContainer(firstNode);
+          const c = options. container || getScrollableContainer(firstNode);
+          // 滚动到第一个错误表单域的位置
+          // 使用的是dom-scroll-into-view这个包
           scrollIntoView(firstNode, c, {
             onlyScrollIfNeeded: true,
             ...options.scroll,

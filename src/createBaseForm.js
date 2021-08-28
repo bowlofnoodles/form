@@ -43,6 +43,8 @@ function createBaseForm(option = {}, mixins = []) {
     withRef,
   } = option;
 
+  // createBaseForm返回一个高阶组件
+  // 这里用了mixins，方便在这里面通过getForm拿到form
   return function decorate(WrappedComponent) {
     const Form = createReactClass({
       mixins,
@@ -181,12 +183,20 @@ function createBaseForm(option = {}, mixins = []) {
         return cache[action].fn;
       },
 
+      // 返回一个函数，接收一个ReactElment 返回一个接管了value和onChange，当然也会包含其它props的包裹组件出来
+      // 所以核心逻辑，其实就是怎么计算props的，然后传给包裹的ReactElement的
       getFieldDecorator(name, fieldOption) {
+        // 通过表单name和传进来的option 算props
         const props = this.getFieldProps(name, fieldOption);
+        // 返回一个函数，接收一个ReactElment 返回一个接管了value和onChange的包裹组件出来
+        // 有点高阶组件那意味.. 只是参数不是组件 而是一个ReactElement
         return fieldElem => {
           // We should put field in record if it is rendered
+          // 调用函数的标志位，标示当前在计算和渲染这个表单项
           this.renderFields[name] = true;
 
+          // 获取表单项Meta
+          // 这里，出现了一个fieldsStore -> 里面会管控form的一些数据和错误状态
           const fieldMeta = this.fieldsStore.getFieldMeta(name);
           const originalProps = fieldElem.props;
           if (process.env.NODE_ENV !== 'production') {
@@ -207,8 +217,12 @@ function createBaseForm(option = {}, mixins = []) {
                 ` please use \`option.initialValue\` instead.`,
             );
           }
+          // 先保存原始Element的props
           fieldMeta.originalProps = originalProps;
+          // 先保存原始Element的ref
           fieldMeta.ref = fieldElem.ref;
+          // cloneElement，把算好的props都传进去（通过this.getFieldProps和this.fieldsStore.getFieldValuePropValue两个方法来算）
+          // -> 算好的props其实就包含我们之前说的接管value 和 onChange props
           const decoratedFieldElem = React.cloneElement(fieldElem, {
             ...props,
             ...this.fieldsStore.getFieldValuePropValue(fieldMeta),
@@ -723,6 +737,7 @@ function createBaseForm(option = {}, mixins = []) {
       },
     });
 
+    // 包裹返回
     return argumentContainer(unsafeLifecyclesPolyfill(Form), WrappedComponent);
   };
 }
